@@ -28,15 +28,10 @@ authRouter.post('/refresh', (req, response) => {
 });
 
 authRouter.post('/login', (req, response) => {
-  // console.log('hit login route');
-  console.log('request headers', req.headers);
+  // console.log('request headers', req.headers);
   // console.log('body', req.body);
 
-  const cookies = new Cookies(req.headers.cookie);
-  console.log('cookies auth test', cookies);
-  console.log('cookies access', cookies.cookies.accessToken);
-
-  const { username, password } = req.body;
+  const { username, password } = req.query;
   // if (req.session.user === 'authenticated') {
   if (req.headers.accessToken) {
     response
@@ -96,7 +91,7 @@ authRouter.post('/login', (req, response) => {
         } else {
           var msg = 'User does not exist';
           console.log(msg);
-          response.status(400).send(msg);
+          response.status(400).send({status: 'warning', message: 'User does not exist.'});
         }
       }
     );
@@ -104,10 +99,8 @@ authRouter.post('/login', (req, response) => {
 });
 
 authRouter.post('/register', (req, response) => {
-  const username = req.body.username;
-  const password = req.body.password;
-  const confirm = req.body.confirm;
-  const inputName = req.body.inputName;
+  console.log('req', req);
+  const { username, password, confirm, inputName } = req.query;
 
   var missingParameters = [];
   if (!username) {
